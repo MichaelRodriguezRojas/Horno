@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\THorno;
+use App\Models\TTemperatura;
+use Exception;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +26,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $horno = THorno::all();
+        return view('home',['hornoData' => $horno]);
     }
+
+    public function getTemperatura(){
+        try {
+            $temperatura = TTemperatura::latest()->first();
+            return response()->json(['temperatura1' => $temperatura->Temp_Prim, 'temperatura2' => $temperatura->Temp_Sec]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e], 500);
+        }
+    }
+    
 }
